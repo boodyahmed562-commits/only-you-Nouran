@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لنوران ❤️</title>
+
+<style>
+body {
+  background: linear-gradient(#ffd6e0, #fff);
+  text-align: center;
+  font-family: Arial;
+  overflow: hidden;
+  transition: 1s;
+}
+
+/* شاشة البداية */
+#startScreen {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: #fff0f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#startBtn {
+  padding: 20px;
+  font-size: 20px;
+  border-radius: 15px;
+  border: none;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
+}
+
+/* العد التنازلي */
+#countdown {
+  font-size: 60px;
+  display: none;
+  color: #ff4d6d;
+}
+
+/* قلوب */
+.heart {
+  position: fixed;
+  bottom: -10px;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  to { transform: translateY(-800px); opacity:0; }
+}
+
+/* زرار */
+button {
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  background: #ff4d6d;
+  color: white;
+  margin: 10px;
+}
+
+#noBtn { position: absolute; }
+
+img {
+  width: 250px;
+  border-radius: 20px;
+  transition: 1s;
+}
+
+/* Glow */
+.glow {
+  color: #ff1a75;
+  text-shadow: 0 0 10px #ff4da6, 0 0 20px #ff66b2;
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse {
+  from { text-shadow: 0 0 10px #ff4da6; }
+  to { text-shadow: 0 0 30px #ff66b2; }
+}
+
+/* النهاية */
+#finalLove {
+  display: none;
+  font-size: 40px;
+  margin-top: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- شاشة البداية -->
+<div id="startScreen">
+  <h2>في حاجة ليكي يا نوران 😏</h2>
+  <button id="startBtn" onclick="startExperience()">اضغطي هنا 💖</button>
+</div>
+
+<div id="countdown">3</div>
+
+<h2 id="question" style="display:none;">انتي بتحبي عبدالرحمن؟ 💖</h2>
+<button onclick="yes()" style="display:none;" id="yesBtn">آه 😍</button>
+<button id="noBtn" onmouseover="moveNo()" style="display:none;">لا 😜</button>
+
+<p id="msg"></p>
+<img id="img" src="" />
+
+<div id="counter"></div>
+<div id="finalMsg"></div>
+
+<div id="finalLove">بحبك يا <span class="glow">نوران</span> ❤️</div>
+
+<audio id="song" src="song.mp3"></audio>
+<audio id="typingSound" src="typing.mp3"></audio>
+
+<script>
+
+/* البداية + countdown */
+function startExperience() {
+  document.getElementById("startScreen").style.display = "none";
+  let c = document.getElementById("countdown");
+  c.style.display = "block";
+
+  let count = 3;
+  let interval = setInterval(() => {
+    c.innerHTML = count;
+    count--;
+    if (count < 0) {
+      clearInterval(interval);
+      c.style.display = "none";
+
+      document.getElementById("question").style.display = "block";
+      document.getElementById("yesBtn").style.display = "inline-block";
+      document.getElementById("noBtn").style.display = "inline-block";
+    }
+  }, 1000);
+}
+
+/* زرار لا */
+function moveNo() {
+  let btn = document.getElementById("noBtn");
+  btn.style.top = Math.random()*400 + "px";
+  btn.style.left = Math.random()*400 + "px";
+}
+
+/* آه */
+function yes() {
+  document.getElementById("msg").innerHTML = "كنت عارف هيهيهيهيي 😎❤️";
+  document.getElementById("img").src = "photo.jpg";
+  document.getElementById("song").play();
+  startTyping();
+}
+
+/* قلوب */
+setInterval(() => {
+  let h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "❤️";
+  h.style.left = Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},300);
+
+/* عداد */
+let startDate = new Date("2025-10-10");
+setInterval(()=>{
+  let d = Math.floor((new Date()-startDate)/(1000*60*60*24));
+  document.getElementById("counter").innerHTML =
+  "بقالنا "+d+" يوم سوا ❤️";
+},1000);
+
+/* الكلام */
+const lines = [
+"بصي بقا يا نانا ❤️",
+"أنا بحبك جدًا ومقدرش استغني عنك 💕",
+"وعايز نفضل جنب بعض على طول 💖",
+"مهما يحصل مفيش حاجه تفرقنا عن بعض ينورعيني 😘",
+"انتي بنتي وروحي ومراتي وأغلى حاجه ف حياتي كلها 😍💋",
+"ربنا يخليكي ليا ينور عيني وميحرمناش من بعض ابداً 💞"
+];
+
+async function startTyping() {
+  let box = document.getElementById("finalMsg");
+  box.style.display = "block";
+
+  for (let line of lines) {
+    await typeLine(line, box);
+    await new Promise(r=>setTimeout(r,600));
+  }
+
+  setTimeout(()=>{
+    document.getElementById("finalLove").style.display = "block";
+
+    // اهتزاز الموبايل 😳
+    if (navigator.vibrate) {
+      navigator.vibrate([200,100,200]);
+    }
+
+  },1000);
+}
+
+function typeLine(text, el) {
+  return new Promise(res=>{
+    let i=0, sound=document.getElementById("typingSound");
+
+    function t(){
+      if(i<text.length){
+        el.innerHTML+=text.charAt(i);
+        sound.currentTime=0;
+        sound.play();
+        i++;
+        setTimeout(t,40);
+      } else {
+        el.innerHTML+="<br>";
+        res();
+      }
+    }
+    t();
+  });
+}
+
+</script>
+
+</body>
+</html>
